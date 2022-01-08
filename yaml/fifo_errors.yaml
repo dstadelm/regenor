@@ -1,0 +1,32 @@
+anchors:
+  - anchor: &error_settings
+      permission: r
+      sticky: true
+      sticky_clear_behaviour: read
+
+  - anchor: &fifo_underrun
+      description: error bit indicating a fifo overflow
+      default: 0
+
+group:
+  inst_name: fifo
+  namespace: fifo
+  type_name: errors
+  description: a group of fifo errors
+
+  nodes:
+    - bit:
+        inst_name: overflow
+        description: error bit indicating a fifo overflow
+        default: 0
+    - bit:
+        <<: *fifo_underrun
+        inst_name: underrun
+        default: 1
+    - bit:
+        <<: *fifo_underrun
+        inst_name: double_underrun
+        default: 1
+    - bit:
+        <<: *fifo_underrun
+        inst_name: tripple_underrun

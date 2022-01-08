@@ -1,0 +1,462 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "type": "object",
+  "properties": {
+    "memory_layout": {
+      "type": "object",
+      "required": ["bank", "register"],
+      "properties": {
+        "base_address": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "bank": {
+          "type": "object",
+          "properties": {
+            "registers": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "required": ["registers"]
+        },
+        "register": {
+          "type": "object",
+          "properties": {
+            "bit": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "required": ["bit"]
+        }
+      }
+    },
+    "anchors": {
+      "type": "array",
+      "items": {}
+    },
+    "group": {
+      "$ref": "#/$defs/group"
+    },
+    "array": {
+      "$ref": "#/$defs/array"
+    },
+    "signed": {
+      "$ref": "#/$defs/signed"
+    },
+    "unsigned": {
+      "$ref": "#/$defs/unsigned"
+    },
+    "bit_vector": {
+      "$ref": "#/$defs/bit_vector"
+    },
+    "bit": {
+      "$ref": "#/$defs/bit"
+    }
+  },
+  "unevaluatedProperties": false,
+  "$defs": {
+    "group": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/composite_properties"
+        },
+        {
+          "$ref": "#/$defs/comon_properties"
+        }
+      ],
+      "properties": {
+        "type_name": {
+          "type": "string",
+          "title": "type name",
+          "description": "The type name must be unique within a namespace. if an element is reused or redefined with the same type name, the structure of that element has to be congruent. The criteria for congruency is that all subelements have equal instance names, type names and namespaces"
+        },
+        "nodes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "group": {
+                "$ref": "#/$defs/group"
+              },
+              "array": {
+                "$ref": "#/$defs/array"
+              },
+              "signed": {
+                "$ref": "#/$defs/signed"
+              },
+              "unsigned": {
+                "$ref": "#/$defs/unsigned"
+              },
+              "bit_vector": {
+                "$ref": "#/$defs/bit_vector"
+              },
+              "bit": {
+                "$ref": "#/$defs/bit"
+              }
+            },
+            "additionalProperties": false
+          },
+          "additionalItems": false
+        }
+      },
+      "unevaluatedProperties": false,
+      "required": [
+        "type_name",
+        "nodes"
+      ]
+    },
+    "array": {
+      "type": "object",
+      "anyOf": [
+        {
+          "$ref": "#/$defs/composite_properties"
+        },
+        {
+          "$ref": "#/$defs/comon_properties"
+        }
+      ],
+      "properties": {
+        "type_name": {
+          "type": "string",
+          "title": "type name",
+          "description": "The type name must be unique within a namespace. if an element is reused or redefined with the same type name, the structure of that element has to be congruent. The criteria for congruency is that all subelements have equal instance names, type names and namespaces"
+        },
+        "array_index": {
+          "type": "string",
+          "title": "Array Index",
+          "description": "Optional value defining the index of the array. The index can be used to set default values by using formulas in the leaf elements."
+        },
+        "array_length": {
+          "type": "integer",
+          "title": "Array Lendth",
+          "description": "Mandatory value defining the lendth of the array."
+        },
+        "node": {
+          "type": "object",
+          "properties": {
+            "group": {
+              "$ref": "#/$defs/group"
+            },
+            "array": {
+              "$ref": "#/$defs/array"
+            },
+            "signed": {
+              "$ref": "#/$defs/signed"
+            },
+            "unsigned": {
+              "$ref": "#/$defs/unsigned"
+            },
+            "bit_vector": {
+              "$ref": "#/$defs/bit_vector"
+            },
+            "bit": {
+              "$ref": "#/$defs/bit"
+            }
+          },
+          "additionalProperties": false,
+          "oneOf": [
+            {
+              "required": [
+                "group"
+              ],
+              "not": {
+                "required": [
+                  "array",
+                  "signed",
+                  "unsigned",
+                  "bit_vector",
+                  "bit"
+                ]
+              }
+            },
+            {
+              "required": [
+                "array"
+              ],
+              "not": {
+                "required": [
+                  "group",
+                  "signed",
+                  "unsigned",
+                  "bit_vector",
+                  "bit"
+                ]
+              }
+            },
+            {
+              "required": [
+                "signed"
+              ],
+              "not": {
+                "required": [
+                  "group",
+                  "array",
+                  "unsigned",
+                  "bit_vector",
+                  "bit"
+                ]
+              }
+            },
+            {
+              "required": [
+                "unsigned"
+              ],
+              "not": {
+                "required": [
+                  "group",
+                  "array",
+                  "signed",
+                  "bit_vector",
+                  "bit"
+                ]
+              }
+            },
+            {
+              "required": [
+                "bit_vector"
+              ],
+              "not": {
+                "required": [
+                  "group",
+                  "array",
+                  "signed",
+                  "unsigned",
+                  "bit"
+                ]
+              }
+            },
+            {
+              "required": [
+                "bit"
+              ],
+              "not": {
+                "required": [
+                  "group",
+                  "array",
+                  "signed",
+                  "unsigned",
+                  "bit_vector"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "required": [
+        "type_name",
+        "array_length",
+        "node"
+      ]
+    },
+    "signed": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/number_values"
+        }
+      ],
+      "properties":{
+        "format": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+",
+          "title": "Format",
+          "description": "Defines the format as <bits integer part>.<bits fractional part>"
+        },
+        "instance_name": {
+          "type": "string",
+          "title": "instance name",
+          "description": "[\"type_name\"] The instance name is the name given to identify it in the instantiation tree. If omited the type name is used as default."
+        }
+      },
+      "required": [
+        "instance_name",
+        "format"
+      ]
+    },
+    "unsigned": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/number_values"
+        }
+      ],
+      "properties":{
+        "format": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+",
+          "title": "Format",
+          "description": "Defines the format as <bits integer part>.<bits fractional part>"
+        },
+        "instance_name": {
+          "type": "string",
+          "title": "instance name",
+          "description": "[\"type_name\"] The instance name is the name given to identify it in the instantiation tree. If omited the type name is used as default."
+        }
+      },
+      "required": [
+        "instance_name",
+        "format"
+      ]
+    },
+    "number_values": {
+      "type": "object",
+      "unevaluatedProperties": false,
+      "anyOf": [
+        {
+          "$ref": "#/$defs/comon_properties"
+        }
+      ],
+      "properties": {
+        "default": {
+          "type": "number",
+          "title": "Default",
+          "description": "[0] The default value as a number"
+        }
+      },
+      "required": [
+        "format"
+      ]
+    },
+    "bit_vector": {
+      "type": "object",
+      "unevaluatedProperties": false,
+      "anyOf": [
+        {
+          "$ref": "#/$defs/comon_properties"
+        }
+      ],
+      "properties": {
+        "instance_name": {
+          "type": "string",
+          "title": "instance name",
+          "description": "[\"type_name\"] The instance name is the name given to identify it in the instantiation tree. If omited the type name is used as default."
+        },
+        "width": {
+          "type": "integer",
+          "minimum": 1,
+          "title": "Vector width",
+          "description": "Defines the number of bits of the vector."
+        },
+        "default": {
+          "type": "integer",
+          "title": "Default",
+          "description": "[0] The default value as a number, hex values are allowed."
+        }
+      },
+      "required": [
+        "width",
+        "instance_name"
+      ]
+    },
+    "bit": {
+      "type": "object",
+      "unevaluatedProperties": false,
+      "anyOf": [
+        {
+          "$ref": "#/$defs/comon_properties"
+        }
+      ],
+      "properties": {
+        "instance_name": {
+          "type": "string",
+          "title": "instance name",
+          "description": "[\"type_name\"] The instance name is the name given to identify it in the instantiation tree. If omited the type name is used as default."
+        },
+        "default": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1,
+          "title": "Default",
+          "default": 1,
+          "description": "[0] The default value a 0 or 1."
+        }
+      },
+      "required": [
+        "instance_name"
+      ]
+    },
+    "comon_properties": {
+      "properties": {
+        "module": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "title": "Module Name",
+              "description": "[\"instance_name\" -> \"type_name\"] The name of the module, if ommited the instance name is used, if no instance name is given the type name is used"
+            },
+            "virtual": {
+              "type": "boolean",
+              "default": "true",
+              "title": "Virtual Module",
+              "description": "If defined virtual the module will only be used for documentation purposes, no actual implementation will be made for HDL. This allowes to include third party elements to be documented in the ICD in the same manner as self developed ones."
+            }
+          },
+          "additioinalProperties": false,
+          "title": "Module identifier",
+          "description": "If this element is present all subelements shall be grouped as a module."
+        },
+        "instance_name": {
+          "type": "string",
+          "title": "instance name",
+          "description": "[\"type_name\"] The instance name is the name given to identify it in the instantiation tree. If omited the type name is used as default."
+        },
+        "offset": {
+          "type": "integer",
+          "title": "offset",
+          "description": "[0] Defines the address offset of any element. the offset is cumulative, meaning that if there is a nother offset in the branch of the tree the offsets are accumulated."
+        },
+        "description": {
+          "type": "string",
+          "title": "description",
+          "description": "[\"\"] The description of the node."
+        },
+        "permission": {
+          "enum": [
+            "r",
+            "w",
+            "rw"
+          ],
+          "title": "permission attribute",
+          "description": "[\"rw\"] Can be one of \"r\" (read), \"w\" (write) or \"rw\" (read and write)."
+        },
+        "readback": {
+          "type": "boolean",
+          "title": "readback",
+          "description": "[true] The internal behaviour of the value read from the register. if set to false the value read is not the value written to the register."
+        },
+        "sticky": {
+          "type": "object",
+          "title": "sticky",
+          "description": "The presence of this element makes the subelements sticky",
+          "properties": {
+            "clear_behaviour": {
+              "enum": [
+                "none",
+                "read",
+                "write"
+              ],
+              "title": "Clear Behaviour",
+              "description": "[none] Defines the mechanism how sticky bits are cleared."
+            }
+          }
+        }
+      }
+    },
+    "composite_properties": {
+      "properties": {
+        "namespace": {
+          "type": "string",
+          "title": "namespace",
+          "description": "Defines a root namespace. This can be used to determine packages or include files that accomodate declarations reused in multiple modules."
+        },
+        "nested_namespace": {
+          "type": "string",
+          "title": "nested namespace",
+          "description": "Namespace within the sourrounding namespace"
+        }
+      }
+    }
+  }
+}

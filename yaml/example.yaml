@@ -1,0 +1,61 @@
+memory_layout:
+  base_address: 0x00000000
+  bank:
+    registers: 64
+  register:
+    bit: 32
+...
+---
+anchors:
+  - anchor: &error_settings
+      permission: r
+      sticky: true
+      sticky_clear_behaviour: read
+
+module: # can start with any of module, group, array, memory
+  - group:
+      namespace: gauss # or nested_namespace
+      inst_name: gauss_filter
+      type_name: filter
+      offset: 1024 # [byte]
+      description: demo bank to show what it could look like
+      permission: rw
+      readback: auto
+      plugin:
+        latex:
+          description: \href{}{}
+
+      nodes:
+      - group:
+          inst_name: errors
+          type_name: errors
+          description: an error group containing groups and fields
+          <<: *error_settings
+
+          nodes:
+          - !include fifo_errors.yaml
+
+          - bit:
+              inst_name: index
+              description: indexing out of bounds
+              default: 0
+
+      - group:
+          inst_name: config
+          type_name: config
+          description: a config group containing an array
+          permission: rw
+          readback: auto
+
+          nodes:
+          - array:
+              inst_name: weight
+              type_name: gauss_weigths
+              description: weights of the gauss filter
+              array_index: i # optional index that can be used for initializing array values
+              array_length: 9
+              integer:
+                type_name: gauss_weight
+                description: a unsigned fixpoint weight
+                format: u6.8
+                default: "i*2" # makes absolutely no sense for gauss it is just an example for the index
